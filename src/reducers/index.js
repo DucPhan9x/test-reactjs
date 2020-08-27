@@ -4,7 +4,7 @@ import { combineReducers } from "redux";
 
 const reducers = combineReducers({
   contacts: contactsReducer,
-  filters: filtersReducer,
+  filter: filtersReducer,
 });
 
 export default reducers;
