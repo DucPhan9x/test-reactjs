@@ -1,10 +1,20 @@
-import React from "react";
+import React, { useState } from "react";
 import { Button } from "react-bootstrap";
 import classes from "./styles/App.module.css";
 import { Link, BrowserRouter, Switch, Route } from "react-router-dom";
 import Contacts from "./components/Contacts";
+import Contact from "./components/Contact";
+import { ALL_COUNTRY, US_COUNTRY } from "./constants/constants";
 
 const App = () => {
+  const [showContacts, setShowContacts] = useState(true);
+  const [showContactDetail, setShowContactDetail] = useState(true);
+  const [selectedContact, setSelectedContact] = useState(null);
+
+  const handleCloseContact = () => {
+    setShowContactDetail(false);
+    setShowContacts(true);
+  };
   return (
     <div className={classes.textCenter}>
       <BrowserRouter>
@@ -14,13 +24,27 @@ const App = () => {
         <Link to="/us-contacts">
           <Button className={classes.buttonB}>US Contacts</Button>
         </Link>
-
+        {selectedContact !== null ? (
+          <Contact
+            contact={selectedContact}
+            showContact={showContactDetail}
+            handleCloseContact={handleCloseContact}
+          />
+        ) : null}
         <Switch>
           <Route exact path="/all-contacts">
-            <Contacts title="All Contacts"></Contacts>
+            <Contacts
+              title="All Contacts"
+              countryId={ALL_COUNTRY}
+              showContacts={showContacts}
+            ></Contacts>
           </Route>
           <Route exact path="/us-contacts">
-            <Contacts title="US Contacts"></Contacts>
+            <Contacts
+              title="US Contacts"
+              countryId={US_COUNTRY}
+              showContacts={showContacts}
+            ></Contacts>
           </Route>
         </Switch>
       </BrowserRouter>
