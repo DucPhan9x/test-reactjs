@@ -7,8 +7,8 @@ import store from "./store/index";
 import "bootstrap/dist/css/bootstrap.css";
 
 ReactDOM.render(
-  <React.StrictMode store={store}>
-    <Provider>
+  <React.StrictMode>
+    <Provider store={store}>
       <App />
     </Provider>
   </React.StrictMode>,

@@ -1,12 +1,20 @@
 import React, { useEffect, useCallback } from "react";
 import { connect } from "react-redux";
+import { createSelector } from "reselect";
 import { fetchContacts } from "../actions/contactsAction";
 import ModalContacts from "./ModalContacts";
 import CustomScrollbars from "./CustomScrollbars";
 import { updateCountry, incrementPageNo } from "../actions/filterContactAction";
+const filterEvenContacts = createSelector(
+  [(state) => state.contacts.data, (state) => state.filter.isOnlyEven],
+  (contacts, onlyEven) => {
+    if (onlyEven) return contacts.filter((contact) => contact.id % 2 === 0);
+    return contacts;
+  }
+);
 
 const mapStateToProps = (state) => ({
-  contactsData: state.contacts.data,
+  contactsData: filterEvenContacts(state),
   pageNo: state.filter.pageNo,
   searchKeyword: state.filter.searchKeyword,
   loading: state.contacts.loading,
