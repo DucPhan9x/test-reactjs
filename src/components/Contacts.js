@@ -1,17 +1,53 @@
-import React from "react";
+import React, { useEffect, useCallback } from "react";
 import { connect } from "react-redux";
 import { fetchContacts } from "../actions/contactsAction";
 import ModalContacts from "./ModalContacts";
+import CustomScrollbars from "./CustomScrollbars";
+import { updateCountry, incrementPageNo } from "../actions/filterContactAction";
+
 const mapStateToProps = (state) => ({
   contactsData: state.contacts.data,
+  pageNo: state.filter.pageNo,
+  searchKeyword: state.filter.searchKeyword,
   loading: state.contacts.loading,
-  isErrors: state.contacts.hasErrors,
+  isErrors: state.contacts.isErrors,
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  fetchData: (countryId) => dispatch(fetchContacts(countryId)),
+  setCountry: (countryId) => dispatch(updateCountry(countryId)),
+  nextPage: () => dispatch(incrementPageNo()),
+  fetchData: (countryId, searchKey, pageNo) =>
+    dispatch(fetchContacts(countryId, searchKey, pageNo)),
 });
-const Contacts = ({ title, showContacts, loading }) => {
+const Contacts = ({
+  title,
+  showContacts,
+  loading,
+  isErrors,
+  countryId,
+  pageNo,
+  searchKeyword,
+  contactsData,
+  selectedContactActive,
+  fetchData,
+  setCountry,
+  nextPage,
+}) => {
+  const setCountryCallback = useCallback(() => setCountry(countryId), [
+    countryId,
+    setCountry,
+  ]);
+  useEffect(() => {
+    setCountryCallback();
+  }, [setCountryCallback]);
+
+  useEffect(() => {
+    fetchData(countryId, searchKeyword, pageNo);
+  }, [countryId, searchKeyword, pageNo, fetchData]);
+
+  const onReachedToBottom = useCallback(() => {
+    nextPage();
+  }, [nextPage]);
   return (
     <ModalContacts title={title} isOpen={showContacts} isLoading={loading}>
       {!isErrors && (

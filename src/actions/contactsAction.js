@@ -15,13 +15,18 @@ export const getContactsSuccess = (contacts) => ({
 export const getContactsFailure = () => ({ type: GET_CONTACTS_FAIL });
 export const resetContacts = () => ({ type: RESET_CONTACTS });
 
-export function fetchContacts(countryId) {
+export function fetchContacts(countryId, queryString, pageNo) {
   return async (dispatch) => {
+    if (pageNo === 1) dispatch(resetContacts());
+    dispatch(getContacts());
+
     const params = {
       companyId: COMPANY_ID,
+      page: pageNo,
     };
 
     if (countryId !== 0) params["countryId"] = countryId;
+    if (queryString.length > 0) params["query"] = queryString;
     const config = {
       headers: {
         Authorization: `Bearer ${AUTH_TOKEN}`,

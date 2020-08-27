@@ -1,11 +1,24 @@
 import React from "react";
-import { Modal, Button, Form } from "react-bootstrap";
+import { connect } from "react-redux";
+import { Modal, Button, Form, Spinner } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import classes from "../styles/App.module.css";
+import {
+  updateSearchKeyword,
+  updateEvenFilter,
+} from "../actions/filterContactAction";
+const mapStateToProps = (state) => ({
+  searchKeyword: state.filter.searchKeyword,
+  isOnlyEven: state.filter.isOnlyEven,
+});
 
-const ModalContacts = ({ title, children }) => {
+const mapDispatchToProps = (dispatch) => ({
+  updateSearch: (value) => dispatch(updateSearchKeyword(value)),
+  updateOnlyEvenFilter: (value) => dispatch(updateEvenFilter(value)),
+});
+const ModalContacts = ({ title, isOpen, isLoading = false, children }) => {
   return (
-    <Modal show={true} size="lg" backdrop="static" onHide={null} centered>
+    <Modal show={isOpen} size="lg" backdrop="static" onHide={null} centered>
       <Modal.Header>
         <Modal.Title>{title}</Modal.Title>
         <Form>
@@ -15,6 +28,11 @@ const ModalContacts = ({ title, children }) => {
       <Modal.Body>{children}</Modal.Body>
       <Modal.Footer className="d-flex justify-content-between">
         <Form.Check type="checkbox" label="Only even" />
+        {isLoading && (
+          <Spinner animation="border" role="status">
+            <span className="sr-only">Loading...</span>
+          </Spinner>
+        )}
 
         <div>
           <Link to="/all-contacts">
@@ -37,4 +55,4 @@ const ModalContacts = ({ title, children }) => {
     </Modal>
   );
 };
-export default ModalContacts;
+export default connect(mapStateToProps, mapDispatchToProps)(ModalContacts);

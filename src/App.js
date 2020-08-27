@@ -11,6 +11,11 @@ const App = () => {
   const [showContactDetail, setShowContactDetail] = useState(true);
   const [selectedContact, setSelectedContact] = useState(null);
 
+  const handleSelectedContact = (contact) => {
+    setShowContacts(false);
+    setSelectedContact(contact);
+    setShowContactDetail(true);
+  };
   const handleCloseContact = () => {
     setShowContactDetail(false);
     setShowContacts(true);
@@ -37,6 +42,7 @@ const App = () => {
               title="All Contacts"
               countryId={ALL_COUNTRY}
               showContacts={showContacts}
+              selectedContactActive={handleSelectedContact}
             ></Contacts>
           </Route>
           <Route exact path="/us-contacts">
@@ -44,6 +50,7 @@ const App = () => {
               title="US Contacts"
               countryId={US_COUNTRY}
               showContacts={showContacts}
+              selectedContactActive={handleSelectedContact}
             ></Contacts>
           </Route>
         </Switch>
